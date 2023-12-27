@@ -1,0 +1,25 @@
+.Card{
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
+    gap: 20px;
+}
+
+.Carde_item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    min-width: 250px;
+    height: fit-content;
+    color: #717171;
+    padding: 5px;
+    border: 1px solid #b1b0b0;
+}
+
+.Button_Card{
+    margin: 20px;
+}

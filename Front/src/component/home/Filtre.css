@@ -1,0 +1,30 @@
+.Category{
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 80px;
+    margin-top: 30px;
+}
+
+.Category_item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #717171;
+}
+
+.Category_item:hover{
+    color: #15446d;
+    transform: scale(1.1);
+
+
+}
+
+.navbar_logo > img{
+    width: 160px;
+    height: 50px;
+    object-fit: fill;
+}
