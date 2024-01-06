@@ -101,8 +101,8 @@ const ForgotPassword = () => {
             </div>
             {/* /Form Group */}
             {loading && <div className="text-center">Loading...</div>}
-            {error && <div className="text-center">{error}</div>}
-            {success && <div className="text-center">{success}</div>}
+            {error && <div className="text-center text-red-600">{error}</div>}
+            {success && <div className="text-center text-green-600">{success}</div>}
             <button
               onClick={handleClick}
               type="submit"

@@ -5,7 +5,7 @@ function Footere() {
   return (
 
     <Footer container >
-      <div className="w-full text-center">
+      <div className="w-full text-center ">
         <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
           <Footer.Brand
             href="/"
@@ -13,9 +13,9 @@ function Footere() {
             alt="Logo"
           />
           <Footer.LinkGroup>
-            <Footer.Link href="#">About</Footer.Link>
-            <Footer.Link href="#">Privacy Policy</Footer.Link>
-            <Footer.Link href="#">Licensing</Footer.Link>
+            <Footer.Link href="#">À propos</Footer.Link>
+            <Footer.Link href="#">Politique de confidentialité</Footer.Link>
+            <Footer.Link href="#">Licence</Footer.Link>
             <Footer.Link href="#">Contact</Footer.Link>
           </Footer.LinkGroup>
         </div>

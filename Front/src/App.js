@@ -6,6 +6,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Notfound from "./pages/Notfound";
 import Listing from "./pages/Listing";
+import MyListing from "./pages/MyListing";
+import MyProfile from "./pages/MyProfile";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,14 @@ const router = createBrowserRouter([
   {
     path: "listing/:id",
     element: <Listing />,
+  },
+  {
+    path: "mylisting",
+    element: <MyListing />,
+  },
+  {
+    path: "/myprofile",
+    element: <MyProfile />,
   },
 ]);
 

@@ -12,35 +12,70 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Footere from '../component/home/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../component/home/Navbar';
-
-// function SignUp(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
+import axios from 'axios';
 
 
 
 const defaultTheme = createTheme();
 
 export default function SignUpFunction() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  const isLoggedIn= window.localStorage.getItem('isLoggedIn')
+  const navigate = useNavigate();
+  const [error, setError] = React.useState("");
+
+  const [formData, setFormData] = React.useState({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+})
+
+
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+console.log(formData);
+
+  const handleClick = async (e) => {
+    try {
+      e.preventDefault();
+      
+       
+  await axios.post("/api/auth/signUp", 
+        formData,
+      ).then((response) => {
+        navigate("/login");
+        setError("");
+
+      }
+      ).catch((error) => {
+        setError(error.response.data);
+
+      }
+      );
+
+    } catch (error) {
+      setError(error.response.data);
+
+    }
   };
+
+  React.useEffect(() => {
+    if (isLoggedIn)
+    {
+     navigate('/')
+    }
+    
+   },);
 
   return (
 
@@ -65,12 +100,13 @@ export default function SignUpFunction() {
           <Typography component="h1" variant="h5" color={'#075985'}>
           S'inscrire
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleClick} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="firstName" 
+                  onChange={handleChange}
                   required
                   fullWidth
                   id="firstName"
@@ -83,6 +119,7 @@ export default function SignUpFunction() {
                   required
                   fullWidth
                   id="lastName"
+                  onChange={handleChange}
                   label="Nom"
                   name="lastName"
                   autoComplete="family-name"
@@ -92,6 +129,7 @@ export default function SignUpFunction() {
                 <TextField
                   required
                   fullWidth
+                  onChange={handleChange}
                   id="email"
                   label="Address Email"
                   name="email"
@@ -102,6 +140,7 @@ export default function SignUpFunction() {
                 <TextField
                   required
                   fullWidth
+                  onChange={handleChange}
                   name="password"
                   label="Mot de passe"
                   type="password"
@@ -114,9 +153,10 @@ export default function SignUpFunction() {
                 <TextField
                   required
                   fullWidth
+                  onChange={handleChange}
                   id="numeroTelephone"
                   label="Numéro de Téléphone"
-                  name="numeroTelephone"
+                  name="phone"
                   autoComplete="numeroTelephone"
                 />
               </Grid>
@@ -128,7 +168,7 @@ export default function SignUpFunction() {
                 />
               </Grid>
             </Grid>
-            <Link to="/">
+            {error && <p className="text-center m-3 text-red-500">{error}</p>}
             <Button
               type="submit"
               fullWidth
@@ -138,7 +178,7 @@ export default function SignUpFunction() {
             >
               S'inscrire
             </Button>
-            </Link>
+
             <Grid container justifyContent="flex-end">
               <Grid item marginBottom={3}>
                 <Link to="/login" variant="body2" >

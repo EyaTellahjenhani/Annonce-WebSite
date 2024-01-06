@@ -6,7 +6,7 @@ import { purple } from "@mui/material/colors";
 import { Card } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const Cards = ({titre, description, image, price, id}) => {
+const Cards = ({ titre, CategoryName, image, price, id }) => {
   const ColorButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
     backgroundColor: "#15446d",
@@ -15,22 +15,25 @@ const Cards = ({titre, description, image, price, id}) => {
     },
   }));
 
+
+
   return (
-      <Card>
+    <Card>
       <div className="Carde_item">
-        <img src={image} width={"250px"} />
+
+                <img width={"230px"} height={"230px"} src={image[0]?.ImageURL} alt=""/>
+              
+          
         <h4>{titre}</h4>
-        <p>{price} DNT</p>
-        <p>
-          {description}
-        </p>
+        <h2>{price} DNT</h2>
+        <p>{CategoryName}</p>
         <Link to={`/Listing/${id}`}>
-        <div className="Button_Card">
-        <ColorButton variant="contained">En savoir plus</ColorButton>
-        </div>
+          <div className="Button_Card">
+            <ColorButton variant="contained">En savoir plus</ColorButton>
+          </div>
         </Link>
       </div>
-      </Card>
+    </Card>
   );
 };
 
