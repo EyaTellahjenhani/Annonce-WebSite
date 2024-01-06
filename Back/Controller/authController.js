@@ -45,7 +45,7 @@ exports.SignUp = async (req, res) => {
     try {
       const userExist = await findUserByEmail(email);
       if (userExist) {
-        res.json("Email allready exist");
+        res.status(400).json("Email allready exist");
       } else {
         const hashedPassword = await bcrypt.hash(password, 10);
         const results = await insertUser(
@@ -56,17 +56,17 @@ exports.SignUp = async (req, res) => {
           phone
         );
         if (results) {
-          res.json("Regestred successfully");
+          res.status(201).json("Regestred successfully");
         } else {
-          res.json("Failed to register");
+          res.status(400).json("Failed to register");
         }
       }
     } catch (err) {
       console.error(err);
-      res.status(500).json("Error during login");
+      res.status(500).json("Error during sign up");
     }
   } else {
-    res.json("Please enter all fields");
+    res.status(400).json("Veuillez saisir tous les champs");
   }
 };
 
@@ -86,7 +86,7 @@ exports.ForgotPassword = async (req, res) => {
 
     // Check if the user exists
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
     // Generate and store reset token
@@ -94,18 +94,16 @@ exports.ForgotPassword = async (req, res) => {
 
     // Send reset password email
     if (resetToken) {
-      const resetPasswordUrl = `http://${req.get(
-        "host"
-      )}/password/reset/${resetToken}`;
+      const resetPasswordUrl = `http://localhost:3000/resetpassword/${resetToken}`;
 
       await sendEmail({
         email: email,
         subject: "Password Reset Link",
         message: `<b>Your password reset link is:</b> <a href="${resetPasswordUrl}">${resetPasswordUrl}<a>`,
       });
-      res.json({ message: "Reset password email sent", resetToken });
+      res.json({ message: "Réinitialiser le mot de passe par e-mail envoyé avec succès", resetToken });
     } else {
-      res.json({ message: "Failed to send reset password email" });
+      res.json({ message: "Échec de l'envoi de l'e-mail de réinitialisation du mot de passe" });
     }
   } catch (error) {
     console.error(error);
@@ -120,9 +118,9 @@ exports.ResetPassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await resetUserPassword(resetToken, hashedPassword);
     if (user) {
-      res.json({ message: "Password updated successfully" });
+      res.status(200).json({ message: "Password updated successfully" });
     } else {
-      res.json({ message: "Failed to update password" });
+      res.status(400).json({ message: "Failed to update password" });
     }
   } catch (error) {
     console.error(error);

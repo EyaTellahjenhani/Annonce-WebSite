@@ -12,7 +12,7 @@ const categoriesRouter = express.Router();
 
 categoriesRouter.get("/", afficherCategories);
 categoriesRouter.get("/:id", afficherCategoriesParId);
-categoriesRouter.post("/", authMiddleware, adminMiddleware, ajouterCategories);
+categoriesRouter.post("/", authMiddleware, adminMiddleware,ajouterCategories);
 categoriesRouter.put("/:id", authMiddleware, adminMiddleware, modifierCategories);
 categoriesRouter.delete("/:id", authMiddleware, adminMiddleware, supprimerCategories);
 

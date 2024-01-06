@@ -9,7 +9,7 @@ const {
 exports.afficherCategories = async (req, res) => {
   try {
     const results = await getCategories();
-    res.json(results);
+    res.status(201).json(results);
   } catch (err) {
     console.error(err);
     res.status(500).json("Error during login");
@@ -37,9 +37,9 @@ exports.ajouterCategories = async (req, res) => {
   if (categoryName) {
       const results = await insertCategories(categoryName);
       if (results) {
-        res.json("Regestred successfully");
+        res.status(201).json("Regestred successfully");
       } else {
-        res.json("Failed to register");
+        res.status(401).json("Failed to register");
       }
     } else {
     res.json("Please enter all fields");
@@ -57,9 +57,9 @@ exports.modifierCategories = async (req, res) => {
     try {
       const results = await updateCategories(categoryName, id);
       if (results) {
-        res.json("Modified successfully");
+        res.status(201).json("Modified successfully");
       } else {
-        res.json("Failed to modified");
+        res.status(400).json("Failed to modified");
       }
     } catch (err) {
       console.error(err);
@@ -75,9 +75,9 @@ exports.supprimerCategories = async (req, res) => {
   const { id } = req.params;
     const results = await deleteCategories(id);
     if (results) {
-      res.json("Deleted successfully");
+      res.status(201).json("Deleted successfully");
     } else {
-      res.json("Failed to delete");
+      res.status(401).json("Failed to delete");
     }
   } catch (err) {
     console.error(err);
