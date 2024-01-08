@@ -20,11 +20,12 @@ const MyListing = () => {
       const fetchData = async () => {
           try {
             setLoading(true);
-              const { data } = await axios.get("/api/listings/mylistings");
+              const { data } = await axios.get("/api/listings/mylistings", {
+                withCredentials: true});
               console.log(data);
               setAnnonce(data);
           } catch (error) {
-            setError("Failed to load Data");
+            setError(error.response.data.message);
            
           } finally {
             setLoading(false);
@@ -59,6 +60,7 @@ const MyListing = () => {
   
       {
       loading ? <div className="text-center my-5"> <Spinner/> </div> : error ? <div className="text-red-600"> {error} </div>:
+      Annonce.length === 0 ? <div className="text-center my-5"> <h1 className="text-2xl"> Vous n'avez pas encore d'annonces </h1> </div> :
     
         <table className="w-full  text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className=" text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -74,6 +76,9 @@ const MyListing = () => {
               </th>
               <th scope="col" className="px-6 py-3">
                 Prix
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Status
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -109,6 +114,20 @@ const MyListing = () => {
               <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
                 {item.Price} DT
               </td>
+
+
+              <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+
+                 {item.Statu === "Accepted" ? (
+            <span className="px-3 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-300 text-green-700">Accepté</span>
+          ) : item.Statu === "Refused" ? (
+            <span className="px-3 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-300 text-red-800">Refusé </span>
+          ) : (
+            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-600">En attent</span>
+          )}
+              </td>
+
+
               <td className="px-4 py-4">
                 <div className="flex gap-2">
                 <div

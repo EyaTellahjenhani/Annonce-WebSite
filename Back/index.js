@@ -6,25 +6,25 @@ const usersRouter = require("./Route/usersRouter");
 const app = express();
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const cookieParser = require('cookie-parser');
-const cloudinary = require('cloudinary').v2;    
-
+const cookieParser = require("cookie-parser");
+const cloudinary = require("cloudinary").v2;
 
 dotenv.config();
 
+//Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json());
 app.use(cookieParser());
 
+//Configuration de cloudinary pour le stockage des images
 cloudinary.config({
   cloud_name: process.env.Cloudinary_Name,
   api_key: process.env.Cloudinary_Key,
   api_secret: process.env.Cloudinary_Secret,
 });
 
-
-
+//Les liens de l'API
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/listings", listingsRouter);

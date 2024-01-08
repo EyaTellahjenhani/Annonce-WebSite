@@ -43,7 +43,6 @@ exports.modifierProfile = async (req, res) => {
 
   const updateFields = {};
 
-  console.log("body",req.body)
   
   // Extract fields from req.body that are not undefined
   if (req.body.firstName !== "") {
@@ -59,7 +58,7 @@ exports.modifierProfile = async (req, res) => {
     updateFields.phone = req.body.phone;
   }
   if (req.body.password !== "") {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     updateFields.password = hashedPassword;
   }
 

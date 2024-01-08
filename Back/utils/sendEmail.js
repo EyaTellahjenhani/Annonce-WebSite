@@ -1,4 +1,4 @@
-const  nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
@@ -12,17 +12,14 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: `"Annonce" ${process.env.SMTP_MAIL}`,
+    from: `"AZUL" ${process.env.SMTP_MAIL}`,
     to: options.email,
     subject: options.subject,
     html: options.message,
-    
   };
-
 
   const info = await transporter.sendMail(mailOptions);
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
 };
 
-module.exports=sendEmail;
+module.exports = sendEmail;

@@ -1,72 +1,92 @@
-const { getListings, insertListings, updateListings, deleteListings, getListingsById, getMyListings, acceptedListings, getListingsByCategory, getFiltredList } = require("../Models/listingsModels");
-const cloudinary = require('cloudinary').v2;    
+const {
+  getListings,
+  insertListings,
+  updateListings,
+  deleteListings,
+  getListingsById,
+  getMyListings,
+  acceptedListings,
+  getFiltredList,
+  getListingsForAdmin,
+  rejectListings,
+} = require("../Models/listingsModels");
+const cloudinary = require("cloudinary").v2;
 
 exports.afficherListings = async (req, res) => {
   try {
-    const { category,title } = req.query;
+    const { category, title } = req.query;
 
-    if (category ||title ) {
-
-      const results = await getFiltredList(category,title);
+    if (category || title) {
+      const results = await getFiltredList(category, title);
 
       res.status(200).json(results);
     } else {
-    const results = await getListings();
-    res.status(200).json(results);
-  } 
-}catch (err) {
+      const results = await getListings();
+      res.status(200).json(results);
+    }
+  } catch (err) {
     console.error(err);
     res.status(500).json("Error during listing");
   }
-}
+};
 
 exports.ajouterListings = async (req, res) => {
   try {
-  const { title, description, price, category, image, Location } = req.body;
-  const { UserID } = req.user;
+    const { title, description, price, category, image, Location } = req.body;
+    const { UserID } = req.user;
 
-  if (title && description && price && category && image.length>0 && Location) {
-  
-    let images = [];
-    if (typeof image === "string") {
+    if (
+      title &&
+      description &&
+      price &&
+      category &&
+      image.length > 0 &&
+      Location
+    ) {
+      let images = [];
+      if (typeof image === "string") {
         images.push(image);
-    } else {
+      } else {
         images = image;
-    }
+      }
 
-    const imagesLink = [];
+      const imagesLink = [];
 
-    for (const element of images) {
+      for (const element of images) {
         const result = await cloudinary.uploader.upload(element, {
-            folder: `listing/`,
+          folder: `listing/`,
         });
 
         imagesLink.push(result.secure_url);
-    }
-    
-      const results = await insertListings(title, description, price, category, imagesLink, Location, UserID);
+      }
+
+      const results = await insertListings(
+        title,
+        description,
+        price,
+        category,
+        imagesLink,
+        Location,
+        UserID
+      );
       if (results) {
         res.status(200).json("Listing inserted successfully");
       } else {
         res.status(401).json("Failed to insert listing");
       }
-     
-    }  else {
+    } else {
       res.status(400).json("Please enter all fields");
     }
   } catch (err) {
     console.error(err);
     res.status(500).json("Error during insert");
   }
-}
-
-
-
+};
 
 exports.modifierListings = async (req, res) => {
   const { id } = req.params;
   const updateFields = {};
-  
+
   // Extract fields from req.body that are not undefined
   if (req.body.title !== undefined) {
     updateFields.title = req.body.title;
@@ -117,29 +137,45 @@ exports.modifierListings = async (req, res) => {
   }
 };
 
+exports.afficherListingsForAdmin = async (req, res) => {
+  try {
+    const results = await getListingsForAdmin();
+    res.status(200).json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Error during listing");
+  }
+};
 
-
-
-
-
-
-
-
+exports.RejectListings = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const results = await rejectListings(id);
+    if (results) {
+      res.status(201).json("Listing rejected successfully");
+    } else {
+      res.status(400).json("Failed to rejected listing");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Error during delete");
+  }
+};
 
 exports.supprimerListings = async (req, res) => {
   const { id } = req.params;
   try {
     const results = await deleteListings(id);
     if (results) {
-      res.status(201).json("Delete successfully");
+      res.status(201).json("Listing deleted successfully");
     } else {
-      res.status(400).json("Failed to delete");
+      res.status(400).json("Failed to delete listing");
     }
   } catch (err) {
     console.error(err);
     res.status(500).json("Error during delete");
   }
-}
+};
 
 exports.afficherListingsParId = async (req, res) => {
   const { id } = req.params;
@@ -163,7 +199,7 @@ exports.afficherMyListings = async (req, res) => {
     if (results) {
       res.status(200).json(results);
     } else {
-      res.status(401).json("Failed to get listing");
+      res.status(400).json("Failed to get listing");
     }
   } catch (err) {
     console.error(err);

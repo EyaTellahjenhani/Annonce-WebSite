@@ -3,7 +3,7 @@ const configBd = require("./configDb");
 
 exports.getListings = async () => {
   const [results] = await configBd.execute(
-    "SELECT FirstName, LastName, Phone, listings.ListingID, Title, Description, Price, Location, CategoryName, DatePosted FROM listings, users, categories WHERE listings.UserID = users.UserID AND listings.CategoryID = categories.CategoryID ORDER BY DatePosted DESC");
+    "SELECT FirstName, LastName, Phone, listings.ListingID, Title, Description, Price, Location, CategoryName, DatePosted, IsAccepted, Statu FROM listings, users, categories WHERE listings.UserID = users.UserID AND listings.CategoryID = categories.CategoryID AND Statu = 'Accepted' ORDER BY DatePosted DESC");
   if (results.length > 0) {
     for (const result of results) {
       const [imageRes] = await configBd.execute("SELECT ImageURL FROM images WHERE ListingID = ?", [result.ListingID]);
@@ -17,7 +17,7 @@ exports.getListings = async () => {
 
 exports.getFiltredList = async (category,title) => {
 
-  let  sql = `SELECT FirstName, LastName, Phone, listings.ListingID, Title, Description, Price, Location, CategoryName, DatePosted FROM listings, users, categories WHERE listings.UserID = users.UserID AND listings.CategoryID = categories.CategoryID `;
+  let  sql = `SELECT FirstName, LastName, Phone, listings.ListingID, Title, Description, Price, Location, CategoryName, DatePosted FROM listings, users, categories WHERE listings.UserID = users.UserID AND listings.CategoryID = categories.CategoryID  AND Statu = 'Accepted' `;
 
   if (category) {
     sql += ` AND CategoryName = '${category}' ORDER BY DatePosted DESC` 
@@ -26,6 +26,21 @@ exports.getFiltredList = async (category,title) => {
     sql += ` And Title LIKE '%${title}%' ` 
   }
   const [results] = await configBd.execute(sql);
+  if (results.length > 0) {
+    for (const result of results) {
+      const [imageRes] = await configBd.execute("SELECT ImageURL FROM images WHERE ListingID = ?", [result.ListingID]);
+      result.images = imageRes;
+    }
+    return results;
+  } else {
+    return null;
+  }
+};
+
+
+exports.getListingsForAdmin = async () => {
+  const [results] = await configBd.execute(
+    "SELECT FirstName, LastName, Phone, listings.ListingID, Title, Description, Price, Location, CategoryName, DatePosted, IsAccepted, Statu FROM listings, users, categories WHERE listings.UserID = users.UserID AND listings.CategoryID = categories.CategoryID ORDER BY DatePosted DESC");
   if (results.length > 0) {
     for (const result of results) {
       const [imageRes] = await configBd.execute("SELECT ImageURL FROM images WHERE ListingID = ?", [result.ListingID]);
@@ -136,10 +151,24 @@ exports.updateListings = async (updateFields, id) => {
   }
 };
 
-exports.deleteListings = async (ListingID) => {
+exports.rejectListings = async (ListingID) => {
+  const [results] = await configBd.execute(
+    "UPDATE listings SET IsAccepted = 0 , Statu = 'Refused' WHERE ListingID=?",
+    [ListingID]
+  );
+  console.log(results)
+  if (results.affectedRows > 0) {
+    return results;
+  } else {
+    return null;
+  }
+};
+
+
+exports.deleteListings = async (id) => {
   const [results] = await configBd.execute(
     "DELETE FROM listings WHERE ListingID=?",
-    [ListingID]
+    [id]
   );
   if (results.affectedRows > 0) {
     return results;
@@ -182,7 +211,7 @@ exports.getMyListings = async (UserID) => {
 
 exports.acceptedListings = async (ListingID) => {
   const [results] = await configBd.execute(
-    "UPDATE listings SET IsAccepted = 1 WHERE ListingID = ?", [ListingID]
+    "UPDATE listings SET IsAccepted = 1 , Statu = 'Accepted' WHERE ListingID = ?", [ListingID]
   );
   if (results.affectedRows > 0) {
     return results;

@@ -214,7 +214,7 @@ const handleSubmit = async (e) => {
                     htmlFor="description"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Description du produit
+                    Description d'annonce
                   </label>
                   <textarea
                   onChange={handelChange}
@@ -316,7 +316,7 @@ const handleSubmit = async (e) => {
                     clipRule="evenodd"
                   />
                 </svg>
-                Ajouter un nouveau produit
+                Modifier l'annonce
               </button>
                     </div>
             

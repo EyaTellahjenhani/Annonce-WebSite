@@ -26,10 +26,17 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await axios.get("/api/users/profile", {
+      await axios.get("/api/users/profile", {
         withCredentials: true,
-      });
-      setData(data);
+      }).then((res) => {
+        
+        setData(res.data);
+
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        logout();
+      }
+    });
     };
     if (isLoggedIn) {
       fetchUser();

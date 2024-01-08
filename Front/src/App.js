@@ -8,6 +8,7 @@ import Notfound from "./pages/Notfound";
 import Listing from "./pages/Listing";
 import MyListing from "./pages/MyListing";
 import MyProfile from "./pages/MyProfile";
+import ConfirmedPage from "./pages/ConfirmedPage";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,11 @@ const router = createBrowserRouter([
     path: "/myprofile",
     element: <MyProfile />,
   },
+  {
+    path: "/emailconfirmation/:token",
+    element: <ConfirmedPage />,
+  },
+  
 ]);
 
 function App() {

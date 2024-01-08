@@ -37,16 +37,16 @@ exports.ajouterCategories = async (req, res) => {
   if (categoryName) {
       const results = await insertCategories(categoryName);
       if (results) {
-        res.status(201).json("Regestred successfully");
+        res.status(201).json("La catégorie a été ajoutée avec succès");
       } else {
-        res.status(401).json("Failed to register");
+        res.status(401).json("Erreur lors de l'ajout de la catégorie");
       }
     } else {
-    res.json("Please enter all fields");
+    res.status(400).json("Veuillez saisir tous les champs");
   }}
   catch (err) {
     console.error(err);
-    res.status(500).json("Error during login");
+    res.status(500).json("erreur lors de l'ajout de la catégorie");
   }
 };
 
@@ -63,7 +63,7 @@ exports.modifierCategories = async (req, res) => {
       }
     } catch (err) {
       console.error(err);
-      res.status(500).json("Error during login");
+      res.status(500).json("Error");
     }
   } else {
     res.json("Please enter all fields");
@@ -81,6 +81,6 @@ exports.supprimerCategories = async (req, res) => {
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json("Error during login");
+    res.status(500).json("Error");
   }
 };
